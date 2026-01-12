@@ -1,16 +1,22 @@
 import express from "express";
-import cors from "cors"
+import { Router } from "express";
 
-const app = express();
+const router = express.Router();
 
-app.use(cors({origin:"*"}));
+// User-related routes
+import userActions from "./modules/user/userActions";
+router.get("/user", userActions.browse);
+router.get("/user/:id", userActions.read);
+router.post("/user", userActions.add);
 
-app.get('/', (req,res) => {
-  console.log('tu es sur la route/');
-  res.send('tu es sur la route/');
-});
+// Auth-related routes
+import authActions from "./modules/user/authActions";
+router.post("/auth/login", authActions.login);
+router.post("/auth/register", authActions.register);
 
-const mainsList= [
+// MainsList data-related routes
+
+const mainsList = [
     {
   "id": 5680,
   "table": {
@@ -133,22 +139,24 @@ const mainsList= [
   "pot": 61,
   "winner": { "playerId": 1, "amount": 61 }
 },
-]
+];
 
 const houses = [
-  { "id": 1, name: "griffondor"},
-  { "id": 2, name: "pouf"},
-]
+  { id: 1, name: "griffondor" },
+  { id: 2, name: "pouf" },
+];
 
-app.get('/mainsList', (req,res) => {
-  console.log(mainsList);
+router.get("/", (req, res) => {
+  console.log("tu es sur la route /");
+  res.send("tu es sur la route /");
+});
+
+router.get("/mainsList", (req, res) => {
   res.json(mainsList);
 });
 
-app.get('/houses', (req, res) => {
+router.get("/houses", (req, res) => {
   res.json(houses);
 });
 
-app.listen(4242, () => {
-  console.log('http://localhost:4242');
-});
+export default router;
